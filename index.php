@@ -42,7 +42,7 @@ Navigation</h3>
 </ul><p>ESS hat Probleme mit Nicht-ASCII-Zeichen. Daher bietet es sich an, die Alternativnamen zu nutzen, die eingeklammert bei <code>-l</code> stehen.</p>
 </div>
 <h2 style='text-transform:uppercase;'>".$_GET["src"]."</h2>
-<form action='https://www.nmke.de/bv.php' method='get'>
+<form action='index.php' method='get'>
 <input type='text' id='q' placeholder='Amos 1:1' style='font-size:1.2rem;' name='query' value='".$_GET["query"]."' />
 <input type='hidden' name='src' value='".$_GET["src"]."'/>
 <button>Send</button>
@@ -72,7 +72,7 @@ if ($_GET["embed"] != "true"){
 			$bookid = explode(")",$bookid);
 			$bookid = $bookid[0];
 			echo $bookid;
-			$txt = $txt."\n<li><a href='https://www.nmke.de/bv.php?query=$bookid&src=".$_GET["src"]."'>$it</a></li>";
+			$txt = $txt."\n<li><a href='https://www.nmke.de/EaScripturaSancta/?query=$bookid&src=".$_GET["src"]."'>$it</a></li>";
 		}
 		//$txt = preg_replace("/\\n/u","</li>\n<li>",$txt);
 		$txt = "<ol>".$txt."\n</ol>";
