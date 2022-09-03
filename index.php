@@ -5,12 +5,12 @@ if ($_GET["embed"] != "true"){
 <html>
 <head>
 <meta charset='utf-8' />
-<link rel='stylesheet' type='text/css' href='https://www.nmke.de/lunil.css' />
+<link rel='stylesheet' type='text/css' href='lunil.css' />
 <link rel='shortcut icon' type='image/svg' href='https://www.nmke.de/icon.svg' />
 <title>ESS - elb</title>
 </head>
 <body>
-<div id=\"box\" class='i'>
+<div id=\"box\">
 <nav>
 <h3><a style='float:left;' href='https://www.nmke.de/'><img src='https://www.nmke.de/icon.svg' 
 	alt='NMKE-Icon' width='35' height='20'/></a>

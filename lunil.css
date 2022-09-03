@@ -1,0 +1,168 @@
+@font-face{
+	src:url("FetteNationalFraktur.ttf") format("truetype");
+	font-family:"Fette National Fraktur";
+}
+
+body{
+	font-family:sans-serif;
+	margin:0;
+	border:0;
+	padding:0;
+	font-size: 1.5rem;
+	background-position:absolute;
+	left:10px;
+	right:10px;
+	hyphens:auto;
+}
+
+#box{
+	background-color:#e1e1d8;
+	padding: 10px;
+	/*min-width:1300px;*/
+	width:inherit;
+}
+
+.i{
+	margin: 0 30px 0 30px;
+}
+
+h1{
+	font-size: 7.0rem;
+	text-align:center;
+	font-family: sans-serif/*cursive*/;
+}
+
+h2{
+	font-size:2.1rem;
+}
+
+article{
+	margin:0;
+	text-align:justify;
+	text-indent: 15px;
+	padding: 5px 25% 5px 25%;
+	min-height:330px;
+}
+
+h1,h2,h3,h4,h5,h6,.ni{
+	text-indent:0;
+}
+
+a{
+	color:#55a;
+	text-decoration:none;
+}
+a:hover{
+	text-decoration:underline;
+}
+
+
+/*NAV*/
+
+
+nav{
+	background-color:rgba(0,0,0,0.0);
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	position:fixed;
+	max-width:22%;
+	z-index:10;
+	float:left;
+	margin: 0 0 15px 0;
+	padding:15px;
+	color:#555;/*color:#ddd;*/
+	text-align: justify;
+	transition: all 0s;
+	padding-right: 0;
+}
+nav:hover{
+	background-color:#08aa41;
+	color:#ddd;
+	transition: all 0.35s;
+}
+nav a{
+	color:#fff;
+	font-family:sans-serif;
+	text-decoration:none;
+	margin: 0 10px;
+	display:block;
+}
+nav .dd{
+	display:none;
+}
+nav:hover .dd{
+	display:block;
+}
+.dd li:hover{
+	background-color:#c00;
+}
+
+.stab {
+	background-color: #08aa41;
+	margin: 0 15px;
+	border: 1px solid #000;
+}
+
+.stab tr td{
+	padding: 0 4px;
+}
+
+div#syntax{
+	border: 1px solid #000;
+	background-color:#ccf;
+	padding: 10px;
+}
+
+/*Media-queries*/
+
+@media(prefers-color-scheme: dark){
+	body{
+		background-color:#111;
+	}
+	#box{
+		background-color:#1e1e27;
+		color:#aaa;
+	}
+	a{
+		color:#55e;
+	}
+	.stab{
+		color:#111;
+	}
+	div#syntax{
+		color:#330;
+	}
+}
+@media (max-width:1200px){
+	nav{
+		float:none;
+		padding:5px;
+		position:relative;
+		max-width:100%;
+	}
+	nav .dd{
+		display:block;
+	}
+	nav:hover{
+		color:#1e1e27;
+		background-color:rgba(0,0,0,0.25);
+	}
+	nav a{
+		color:#55a; /*228*/
+	}	
+	article{
+		padding:5px;
+	}
+}
+@media(prefers-color-scheme: dark){
+	body{
+		background-color:#111;
+	}
+	#box{
+		background-color:#1e1e27;
+		color:#aaa;
+	}
+	a{
+		color:#55e;
+	}
+}
