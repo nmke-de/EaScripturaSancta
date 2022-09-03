@@ -1,5 +1,24 @@
 <?php
-//echo json_encode($_GET);
+
+/*function parsequery ($query) {
+	if ($query[0] == "/")
+		return function ($entry) {return preg_match($query . "/ui", $entry[5]);};
+	else {
+		return function ($entry) {
+			return false; // TODO complete this
+		};
+	}
+}*/
+
+function matchverses($query, $file) {
+	$verses = array();
+	while (($line = fgets($file)) !== false) {
+		$entry = explode("\t", $line);
+		if (preg_match($query . "/ui", $entry[5]))
+			array_push($verses, $entry);
+	}
+	return $verses;
+}
 
 $f = fopen("bib/" . $_GET["src"] . ".tsv", "r");
 
@@ -24,7 +43,7 @@ Navigation</h3>
 <ul>
 <li><a href='index.php'>Startseite</a></li>
 <li><a href='https://github.com/nmke-de/EaScripturaSancta'>Source Code</a></li>
-<hr>";
+<hr>\n";
 	$lastbook = "";
 	while (($line = fgets($f)) !== false) {
 		$entry = explode("\t", $line);
@@ -65,7 +84,9 @@ $cmd = "bib/".$_GET["src"]." ";
 if ($_GET["query"] == "-l") $cmd = $cmd . $_GET["query"];
 elseif ($_GET["query"] == "") $cmd = "echo \"Help\\n0:0\\tRead the syntax section!\"";
 else $cmd = $cmd . "-W " . $_GET["query"];
-$txt = shell_exec(escapeshellcmd($cmd));
+$txt = "";
+if ($_GET["query"][0] == "/") $txt = matchverses($_GET["query"], $f);
+else $txt = shell_exec(escapeshellcmd($cmd));
 
 if ($_GET["embed"] != "true"){
 	//echo $txt;
@@ -88,6 +109,10 @@ if ($_GET["embed"] != "true"){
 		}
 		//$txt = preg_replace("/\\n/u","</li>\n<li>",$txt);
 		$txt = "<ol>".$txt."\n</ol>";
+	}else if ($_GET["query"][0] == "/") {
+		foreach ($txt as $entry) {
+			echo "<p>" . $entry[5] . "</p>";
+		}
 	}else if(!preg_match("/^Unknown reference: /u",$txt)){
 		/*"if(!txt.match(/^Unknown reference: /)){
 				txt = txt.replace(/^(.*?)\\n/g,(match,bname)=>{return '<h3>'+bname+'</h3>';});
