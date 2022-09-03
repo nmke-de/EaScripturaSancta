@@ -1,14 +1,23 @@
 <?php
 
-/*function parsequery ($query) {
+$NUMBER = "[1-9][0-9]*";
+$BOOK = "[1-9]?[a-zA-Z ]+";
+$SEARCH = "/.*$";
+
+$AFTERVERSE = "-($NUMBER):($NUMBER)|-($NUMBER)|(,$NUMBER)*";
+$AFTERCHAPTER = "$SEARCH|-($NUMBER)|:($NUMBER)($AFTERVERSE)?";
+$AFTERBOOK = "$SEARCH|[ :]?($NUMBER)($AFTERCHAPTER)?";
+
+function parsequery ($query) {
 	if ($query[0] == "/")
 		return function ($entry) {return preg_match($query . "/ui", $entry[5]);};
-	else {
-		return function ($entry) {
-			return false; // TODO complete this
-		};
-	}
-}*/
+	preg_match("/^($BOOK)($AFTERBOOK)$/u", $query, $matches);
+	$book = $matches[1];
+	if ($matches[2][0] == "/")
+		return function ($entry) {return (preg_match($book, $entry[0]) || $book = $entry[1]) && preg_match($matches[2] . "/ui", $entry[5])};
+	;
+	return function ($entry) {return false;};
+}
 
 function matchverses($query, $file) {
 	$verses = array();
@@ -110,8 +119,13 @@ if ($_GET["embed"] != "true"){
 		//$txt = preg_replace("/\\n/u","</li>\n<li>",$txt);
 		$txt = "<ol>".$txt."\n</ol>";
 	}else if ($_GET["query"][0] == "/") {
+		$lastbook = "";
 		foreach ($txt as $entry) {
-			echo "<p>" . $entry[5] . "</p>";
+			if ($lastbook != $entry[0]) {
+				$lastbook = $entry[0];
+				echo "<h3>" . $entry[0] . "</h3>\n";
+			}
+			echo "<p>" . $entry[5] . "</p>\n";
 		}
 	}else if(!preg_match("/^Unknown reference: /u",$txt)){
 		/*"if(!txt.match(/^Unknown reference: /)){
