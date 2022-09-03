@@ -1,8 +1,6 @@
 <!DOCTYPE svg>
 
 <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">
-	<a href="https://www.nmke.de">
-		<rect x="0" y="0" width="200" height="200" fill="#048"></rect>
-		<polygon points="80,40 80,80 40,80 40,120 80,120 80,200 120,200 120,120 160,120 160,80 120,80 120,40" fill="#311"></polygon>
-	</a>
+	<rect x="0" y="0" width="200" height="200" fill="#048"></rect>
+	<polygon points="80,40 80,80 40,80 40,120 80,120 80,200 120,200 120,120 160,120 160,80 120,80 120,40" fill="#311"></polygon>
 </svg>
