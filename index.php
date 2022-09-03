@@ -6,14 +6,14 @@ if ($_GET["embed"] != "true"){
 <head>
 <meta charset='utf-8' />
 <link rel='stylesheet' type='text/css' href='lunil.css' />
-<link rel='shortcut icon' type='image/svg' href='https://www.nmke.de/icon.svg' />
+<link rel='shortcut icon' type='image/svg' href='icon.svg' />
 <title>ESS - elb</title>
 </head>
 <body>
 <div id=\"box\">
 <nav>
-<h3><a style='float:left;' href='https://www.nmke.de/'><img src='https://www.nmke.de/icon.svg' 
-	alt='NMKE-Icon' width='35' height='20'/></a>
+<h3><a style='float:left;' href='index.php'><img src='icon.svg' 
+	alt='ESS-Icon' width='20' height='20'/></a>
 Navigation</h3>
 <a href='https://www.nmke.de/impressum.cdo'>Impressum</a>
 <div class='dd'>
