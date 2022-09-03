@@ -1,6 +1,9 @@
 <?php
 //echo json_encode($_GET);
-if ($_GET["embed"] != "true"){
+
+$f = fopen("bib/" . $_GET["src"] . ".tsv", "r");
+
+if ($_GET["embed"] != "true") {
 	echo "<!DOCTYPE html>
 <html>
 <head>
@@ -17,12 +20,21 @@ if ($_GET["embed"] != "true"){
 Navigation</h3>
 <a href='https://www.nmke.de/impressum.cdo'>Impressum</a>
 <div class='dd'>
-<h4><a href='https://www.nmke.de'>NMKE</a></h4>
+<h4><a href='index.php'>ESS</a></h4>
 <ul>
-<li><a href='https://www.nmke.de/'>Startseite</a></li>
-<li><a href='https://www.nmke.de/ess.cdo'>Ea Scriptura Sancta</a></li>
-<li><a href='https://wiby.me/'>Wiby.me - Suchmaschine</a></li>
-</ul>
+<li><a href='index.php'>Startseite</a></li>
+<li><a href='https://github.com/nmke-de/EaScripturaSancta'>Source Code</a></li>
+<hr>";
+	$lastbook = "";
+	while (($line = fgets($f)) !== false) {
+		$entry = explode("\t", $line);
+		if ($lastbook !== $entry[0]) {
+			$lastbook = $entry[0];
+			echo "<li><a href='index.php?query=" . $entry[1] . "&src=" . $_GET["src"] . "'>" . $entry[0] . "</a></li>\n";
+		}
+	}
+	fseek($f, 0);
+	echo "</ul>
 </div>
 </nav>
 <article id='main-article' style='display:block;'>
@@ -59,7 +71,7 @@ if ($_GET["embed"] != "true"){
 	//echo $txt;
 	if ($_GET["query"] == "-l"){
 		echo "<pre><code>".$txt."</code></pre>";
-		$li = explode("/\\n/u",$txt);
+		$li = explode("/\n/gm",$txt);
 		echo json_encode($li);
 		$txt = "";
 		foreach($li as $it){
@@ -92,5 +104,7 @@ if ($_GET["embed"] != "true"){
 	echo $txt;
 	//echo escapeshellcmd($cmd);
 }
+
+fclose($f);
 
 ?>

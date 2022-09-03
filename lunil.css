@@ -71,6 +71,8 @@ nav{
 	text-align: justify;
 	transition: all 0s;
 	padding-right: 0;
+	max-height: 80%;
+	overflow: auto;
 }
 nav:hover{
 	background-color:#048;
