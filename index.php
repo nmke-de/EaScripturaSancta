@@ -14,7 +14,7 @@ function parsequery ($query) {
 	preg_match("/^($BOOK)($AFTERBOOK)$/u", $query, $matches);
 	$book = $matches[1];
 	if ($matches[2][0] == "/")
-		return function ($entry) {return (preg_match($book, $entry[0]) || $book = $entry[1]) && preg_match($matches[2] . "/ui", $entry[5])};
+		return function ($entry) {return (preg_match($book, $entry[0]) || $book = $entry[1]) && preg_match($matches[2] . "/ui", $entry[5]);};
 	;
 	return function ($entry) {return false;};
 }
