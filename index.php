@@ -122,11 +122,15 @@ if ($_GET["embed"] != "true"){
 		$lastbook = "";
 		foreach ($txt as $entry) {
 			if ($lastbook != $entry[0]) {
+				if ($lastbook != "")
+					echo "</table>\n";
 				$lastbook = $entry[0];
-				echo "<h3>" . $entry[0] . "</h3>\n";
+				echo "<table><caption>$entry[0]</caption>\n";
 			}
-			echo "<p>" . $entry[5] . "</p>\n";
+			echo "<tr><td>$entry[3]:$entry[4]</td><td>$entry[5]</td></tr>\n";
+			//echo $entry[3] . ":" . $entry[4] . "\t" . $entry[5] . "<br />\n";
 		}
+		echo "</table>";
 	}else if(!preg_match("/^Unknown reference: /u",$txt)){
 		/*"if(!txt.match(/^Unknown reference: /)){
 				txt = txt.replace(/^(.*?)\\n/g,(match,bname)=>{return '<h3>'+bname+'</h3>';});
