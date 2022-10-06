@@ -1,5 +1,14 @@
 <?php
 
+// Associative array to filter verses
+$filter = array();
+$filter["search"] = ".*";
+$filter["book"] = ".*";
+$filter["chapter"] = 1;
+$filter["chapter-end"] = 150;
+$filter["verse"] = 1;
+$filter["verse-end"] = 176;
+
 $NUMBER = "[1-9][0-9]*";
 $BOOK = "[1-9]?[a-zA-Z ]+";
 $SEARCH = "/.*$";
@@ -19,11 +28,11 @@ function parsequery ($query) {
 	return function ($entry) {return false;};
 }
 
-function matchverses($query, $file) {
+function matchverses($file) {
 	$verses = array();
 	while (($line = fgets($file)) !== false) {
 		$entry = explode("\t", $line);
-		if (preg_match($query . "/ui", $entry[5]))
+		if ((preg_match("/" . $filter["book"] . "/ui", $entry[0]) || $filter["book"] == $entry[1]) && $filter["chapter"] <= (int)$entry[3] && $filter["chapter-end"] >= (int)$entry[3] && $filter["verse"] <= (int)$entry[4] && $filter["verse-end"] >= (int)$entry[4] && preg_match("/" . $filter["search"] . "/ui", $entry[5]))
 			array_push($verses, $entry);
 	}
 	return $verses;
