@@ -11,7 +11,7 @@ $filter["verse-end"] = 176;
 
 $NUMBER = "[1-9][0-9]*";
 $BOOK = "[1-9]?[a-zA-Z ]+";
-$SEARCH = "/.*$";
+$SEARCH = "/(.*)$";
 
 $AFTERVERSE = "-($NUMBER):($NUMBER)|-($NUMBER)|(,$NUMBER)*";
 $AFTERCHAPTER = "$SEARCH|-($NUMBER)|:($NUMBER)($AFTERVERSE)?";
@@ -25,9 +25,21 @@ function parsequery ($query) {
 	if ($matches[2][0] == "/")
 		return function ($entry) {return (preg_match($book, $entry[0]) || $book = $entry[1]) && preg_match($matches[2] . "/ui", $entry[5]);};
 	;*/
-	//
-	//return function ($entry) {return false;};
-	return null;
+	$filter = array();
+	$filter["search"] = ".*";
+	$filter["book"] = ".*";
+	$filter["chapter"] = 1;
+	$filter["chapter-end"] = 150;
+	$filter["verse"] = 1;
+	$filter["verse-end"] = 176;
+	if (preg_match("/^([1-9]?[a-zA-Z ]+)/u", $query, $matched)) {
+		$filter["book"] = $matched[1];
+		$query = substr($query, strlen($matched[1]));
+	} else if (preg_match("/\/(.*)$/u", $query, $matched)) {
+		$filter["search"] = $matched[1];
+		return $filter;
+	} else return $filter;
+	return $filter;
 }
 
 function matchverses($file) {
@@ -100,6 +112,8 @@ Navigation</h3>
 </form>\n";
 }
 
+$filter = parsequery($_GET["query"]);
+echo json_encode($filter);
 $cmd = "bib/".$_GET["src"]." ";
 if ($_GET["query"] == "-l") $cmd = $cmd . $_GET["query"];
 elseif ($_GET["query"] == "") $cmd = "echo \"Help\\n0:0\\tRead the syntax section!\"";
