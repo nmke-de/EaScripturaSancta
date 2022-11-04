@@ -18,14 +18,16 @@ $AFTERCHAPTER = "$SEARCH|-($NUMBER)|:($NUMBER)($AFTERVERSE)?";
 $AFTERBOOK = "$SEARCH|[ :]?($NUMBER)($AFTERCHAPTER)?";
 
 function parsequery ($query) {
-	if ($query[0] == "/")
+	/*if ($query[0] == "/")
 		return function ($entry) {return preg_match($query . "/ui", $entry[5]);};
 	preg_match("/^($BOOK)($AFTERBOOK)$/u", $query, $matches);
 	$book = $matches[1];
 	if ($matches[2][0] == "/")
 		return function ($entry) {return (preg_match($book, $entry[0]) || $book = $entry[1]) && preg_match($matches[2] . "/ui", $entry[5]);};
-	;
-	return function ($entry) {return false;};
+	;*/
+	//
+	//return function ($entry) {return false;};
+	return null;
 }
 
 function matchverses($file) {
@@ -33,7 +35,7 @@ function matchverses($file) {
 	while (($line = fgets($file)) !== false) {
 		$entry = explode("\t", $line);
 		if ((preg_match("/" . $filter["book"] . "/ui", $entry[0]) || $filter["book"] == $entry[1]) && $filter["chapter"] <= (int)$entry[3] && $filter["chapter-end"] >= (int)$entry[3] && $filter["verse"] <= (int)$entry[4] && $filter["verse-end"] >= (int)$entry[4] && preg_match("/" . $filter["search"] . "/ui", $entry[5]))
-			array_push($verses, $entry);
+			$verses[] = $entry;
 	}
 	return $verses;
 }
@@ -103,7 +105,7 @@ if ($_GET["query"] == "-l") $cmd = $cmd . $_GET["query"];
 elseif ($_GET["query"] == "") $cmd = "echo \"Help\\n0:0\\tRead the syntax section!\"";
 else $cmd = $cmd . "-W " . $_GET["query"];
 $txt = "";
-if ($_GET["query"][0] == "/") $txt = matchverses($_GET["query"], $f);
+if ($_GET["query"][0] == "/") $txt = json_encode(matchverses($f));
 else $txt = shell_exec(escapeshellcmd($cmd));
 
 if ($_GET["embed"] != "true"){
