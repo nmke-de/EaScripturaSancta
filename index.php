@@ -42,12 +42,33 @@ function parsequery ($query) {
 	} else return $filter;
 
 	if (preg_match("/^[ :]?([1-9][0-9]*)/u", $query, $matched)) {
-		$filter["chapter"] = $matched[1] * 1;
+		$filter["chapter"] = (int)$matched[1];
+		$filter["chapter-end"] = (int)$matched[1];
 		$query = substr($query, strlen($matched[1]));
 	} else if (preg_match("/^\/(.*)$/u", $query, $matched)) {
 		$filter["search"] = $matched[1];
 		return $filter;
 	} else return $filter;
+
+	if (preg_match("/^:([1-9][0-9]*)/u", $query, $matched)) {
+		$filter["verse"] = (int)$matched[1];
+		$filter["verse-end"] = (int)$matched[1];
+		$query = substr($query, strlen($matched[1]));
+	} else if (preg_match("/^-([1-9][0-9]*)$/u", $query, $matched)) {
+		$filter["chapter-end"] = (int)$matched[1];
+		return $filter;
+	} else if (preg_match("/^\/(.*)$/u", $query, $matched)) {
+		$filter["search"] = $matched[1];
+		return $filter;
+	} else return $filter;
+
+	if (preg_match("/^-([1-9][0-9]*)$/u", $query, $matched)) {
+		$filter["verse-end"] = (int)$matched[1];
+		return $filter;
+	} else if (preg_match("/^-([1-9][0-9]*)/u", $query, $matched)) {
+		$filter["chapter-end"] = (int)$matched[1];
+		$query = substr($query, strlen($matched[1]));
+	}
 	return $filter;
 }
 
