@@ -69,7 +69,9 @@ function matchverses($file, $filter) {
 
 $f = fopen("bib/" . $_GET["src"] . ".tsv", "r");
 
-if ($_GET["embed"] != "true") {
+$embed = $_GET["embed"] == "true";
+
+if (!$embed) {
 	echo "<!DOCTYPE html>
 <html>
 <head>
@@ -127,27 +129,35 @@ Navigation</h3>
 }
 
 $filter = parsequery($_GET["query"]);
-echo "<code>" . json_encode($filter) . "</code>\n";
+//echo "<code>" . json_encode($filter) . "</code>\n";
 $result = matchverses($f, $filter);
 
 //echo "<code>" . json_encode($result) . "</code>\n";
 
-if ($_GET["embed"] != "true"){
-	$lastbook = "";
-	foreach ($result as $current) {
-		if ($lastbook != $current[0]) {
-			if ($lastbook != "")
+
+
+$lastbook = "";
+foreach ($result as $current) {
+	if ($lastbook != $current[0]) {
+		if ($lastbook != "")
+			if ($embed)
+				echo "\n";
+			else
 				echo "</dl>\n";
-			$lastbook = $current[0];
+		$lastbook = $current[0];
+		if ($embed)
+			echo "$current[0]\n\n";
+		else
 			echo "<h2>$current[0]</h2>\n<dl>\n";
-		}
-		echo "<dt>$current[3]:$current[4]</dt><dd>$current[5]</dd>\n";
 	}
+	if ($embed)
+		echo "$current[3]:$current[4]\t$current[5]";
+	else
+		echo "<dt>$current[3]:$current[4]</dt><dd>$current[5]</dd>\n";
+}
+if (!$embed) {
 	echo "</dl>";
 	echo "</article>\n</div>\n</body>\n</html>\n";
-}else{
-	echo $result;
-	//echo escapeshellcmd($cmd);
 }
 
 fclose($f);
