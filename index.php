@@ -9,6 +9,11 @@ function parsequery ($query) {
 	$filter["verse"] = 1;
 	$filter["verse-end"] = 176;
 
+	if (!$query) {
+		$filter["search"] = "\x00";
+		$filter["book"] = "\x00";
+	}
+
 	if (preg_match("/^([1-9]?[a-zA-Z\x80-\xff ]+)/", $query, $matched)) {
 		$filter["book"] = trim($matched[1]);
 		$query = substr($query, strlen($matched[1]));
