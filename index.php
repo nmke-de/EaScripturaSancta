@@ -75,11 +75,11 @@ function parsequery ($query) {
 	return $filter;
 }
 
-function matchverses($file) {
+function matchverses($file, $filter) {
 	$verses = array();
 	while (($line = fgets($file)) !== false) {
 		$entry = explode("\t", $line);
-		if ((preg_match("/" . $filter["book"] . "/ui", $entry[0]) || $filter["book"] == $entry[1]) && $filter["chapter"] <= (int)$entry[3] && $filter["chapter-end"] >= (int)$entry[3] && $filter["verse"] <= (int)$entry[4] && $filter["verse-end"] >= (int)$entry[4] && preg_match("/" . $filter["search"] . "/ui", $entry[5]))
+		if ((preg_match("/$filter[book]/ui", $entry[0]) || $filter["book"] == $entry[1]) && $filter["chapter"] <= (int)$entry[3] && $filter["chapter-end"] >= (int)$entry[3] && $filter["verse"] <= (int)$entry[4] && $filter["verse-end"] >= (int)$entry[4] && preg_match("/$filter[search]/iu", $entry[5]))
 			$verses[] = $entry;
 	}
 	return $verses;
@@ -152,8 +152,8 @@ if ($_GET["query"] == "-l") $cmd = $cmd . $_GET["query"];
 elseif ($_GET["query"] == "") $cmd = "echo \"Help\\n0:0\\tRead the syntax section!\"";
 else $cmd = $cmd . "-W " . $_GET["query"];
 $txt = "";
-if ($_GET["query"][0] == "/") $txt = json_encode(matchverses($f));
-else $txt = shell_exec(escapeshellcmd($cmd));
+/*if ($_GET["query"][0] == "/")*/ $txt = json_encode(matchverses($f, $filter));
+//else $txt = shell_exec(escapeshellcmd($cmd));
 
 if ($_GET["embed"] != "true"){
 	//echo $txt;
