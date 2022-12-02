@@ -75,6 +75,7 @@ function matchverses($file, $filter) {
 $f = fopen("bib/" . $_GET["src"] . ".tsv", "r");
 
 $embed = $_GET["embed"] == "true";
+$debug = $_GET["debug"] == "true";
 
 if (!$embed) {
 	echo "<!DOCTYPE html>
@@ -83,7 +84,7 @@ if (!$embed) {
 <meta charset='utf-8' />
 <link rel='stylesheet' type='text/css' href='./lunil.css' />
 <link rel='shortcut icon' type='image/svg' href='icon.svg' />
-<title>ESS - elb</title>
+<title>ESS - $_GET[src]</title>
 </head>
 <body>
 <div id=\"box\">
@@ -95,7 +96,7 @@ Navigation</h3>
 <div class='dd'>
 <h4><a href='index.php'>ESS</a></h4>
 <ul>
-<li><a href='index.php'>Startseite</a></li>
+<li><a href='index.php'>Home</a></li>
 <li><a href='https://github.com/nmke-de/EaScripturaSancta'>Source Code</a></li>
 <hr>\n";
 	$lastbook = "";
@@ -114,16 +115,14 @@ Navigation</h3>
 <h1>Ea Scriptura Sancta</h1>
 <div id='syntax'><h2 style='text-align:center;'>Syntax</h2>
 <ul>
-<li>[Buch]</li>
-<li>[Buch] [Kapitel]</li>
-<li>[Buch] [Kapitel]-[Kapitel]</li>
-<li>[Buch] [Kapitel]:[Vers]-[Vers]</li>
-<li>[Buch] [Kapitel]:[Vers]-[Kapitel]:[Vers]</li>
-<li>/[Suchbegriff]</li>
-<li>[Buch]/[Suchbegriff]</li>
-<li>[Buch] [Kapitel]/[Suchbegriff]</li>
-<li><code>-l</code></li>
-</ul><p>ESS hat Probleme mit Nicht-ASCII-Zeichen. Daher bietet es sich an, die Alternativnamen zu nutzen, die eingeklammert bei <code>-l</code> stehen.</p>
+<li>[book]</li>
+<li>[book] [chapter]</li>
+<li>[book] [chapter]-[chapter]</li>
+<li>[book] [chapter]:[verse]-[verse]</li>
+<li>[book] [chapter]:[verse]-[chapter]:[verse]</li>
+<li>/[search term]</li>
+<li>[book]/[search term]</li>
+<li>[book] [chapter]/[search term]</li>
 </div>
 <h2 style='text-transform:uppercase;'>".$_GET["src"]."</h2>
 <form action='index.php' method='get'>
@@ -134,7 +133,8 @@ Navigation</h3>
 }
 
 $filter = parsequery($_GET["query"]);
-//echo "<code>" . json_encode($filter) . "</code>\n";
+if ($debug)
+	echo "<code>" . json_encode($filter) . "</code>\n";
 $result = matchverses($f, $filter);
 
 //echo "<code>" . json_encode($result) . "</code>\n";
