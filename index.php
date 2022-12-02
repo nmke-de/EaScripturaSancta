@@ -72,7 +72,7 @@ function matchverses($file, $filter) {
 $f = fopen("bib/" . $_GET["src"] . ".tsv", "r");
 
 $embed = $_GET["embed"] == "true";
-$debug = $_GET["debug"] == "true";
+$debug = $_GET["debug"] == "on";
 
 if (!$embed) {
 	echo "<!DOCTYPE html>
@@ -126,6 +126,7 @@ Navigation</h3>
 <input type='text' id='q' placeholder='Amos 1:1' style='font-size:1.2rem;' name='query' value='".$_GET["query"]."' />
 <input type='hidden' name='src' value='".$_GET["src"]."'/>
 <button>Send</button>
+<label name='debug'><input type='checkbox' name='debug'/>Debug</label>
 </form>\n";
 }
 
