@@ -53,7 +53,7 @@ function parsequery ($query) {
 	if (preg_match("/^:([1-9][0-9]*)/u", $query, $matched)) {
 		$filter["verse"] = (int)$matched[1];
 		$filter["verse-end"] = (int)$matched[1];
-		$query = substr($query, strlen($matched[1]));
+		$query = substr($query, strlen($matched[0]));
 	} else if (preg_match("/^-([1-9][0-9]*)$/u", $query, $matched)) {
 		$filter["chapter-end"] = (int)$matched[1];
 		return $filter;
@@ -68,7 +68,10 @@ function parsequery ($query) {
 	} else if (preg_match("/^-([1-9][0-9]*)/u", $query, $matched)) {
 		$filter["chapter-end"] = (int)$matched[1];
 		$query = substr($query, strlen($matched[1]));
-	}
+	} else return $filter;
+
+	if (preg_match("/^:([1-9][0-9]*)$/u", $query, $matched))
+		$filter["verse-end"] = (int)$matched[1];
 	return $filter;
 }
 
