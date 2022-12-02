@@ -32,6 +32,7 @@ function parsequery ($query) {
 	$filter["chapter-end"] = 150;
 	$filter["verse"] = 1;
 	$filter["verse-end"] = 176;
+	$filter["superflag"] = false;
 
 	if (preg_match("/^([1-9]?[a-zA-Z ]+)/u", $query, $matched)) {
 		$filter["book"] = trim($matched[1]);
@@ -70,16 +71,27 @@ function parsequery ($query) {
 		$query = substr($query, strlen($matched[0]));
 	} else return $filter;
 
-	if (preg_match("/^:([1-9][0-9]*)$/u", $query, $matched))
+	if (preg_match("/^:([1-9][0-9]*)$/u", $query, $matched)) {
 		$filter["verse-end"] = (int)$matched[1];
+		$filter["superflag"] = true;
+	}
 	return $filter;
 }
 
 function matchverses($file, $filter) {
 	$verses = array();
+	//$sf_printing = false;
 	while (($line = fgets($file)) !== false) {
 		$entry = explode("\t", $line);
-		if ((preg_match("/$filter[book]/ui", $entry[0]) || $filter["book"] == $entry[1]) && $filter["chapter"] <= (int)$entry[3] && $filter["chapter-end"] >= (int)$entry[3] && $filter["verse"] <= (int)$entry[4] && $filter["verse-end"] >= (int)$entry[4] && preg_match("/$filter[search]/iu", $entry[5]))
+		$bookfilter = (preg_match("/$filter[book]/ui", $entry[0]) || $filter["book"] == $entry[1]);
+		$chapterrange = ($filter["chapter"] <= (int)$entry[3] && $filter["chapter-end"] >= (int)$entry[3]);
+		$verserange = ($filter["verse"] <= (int)$entry[4] && $filter["verse-end"] >= (int)$entry[4]);
+		$searchfilter = (preg_match("/$filter[search]/iu", $entry[5]));
+		//if ($filter["superflag"] && !$sf_printing && $bookfilter && $filter["chapter"] == (int)$entry[3] && $filter["verse"] == (int)$entry[4])
+		//	$sf_printing = true;
+		//else if ($filter["superflag"] && !$sf_printing && $bookfilter && $filter["chapter-end"] == (int)$entry[3] && $filter["verse-end"] > (int)$entry[4])
+		//	$sf_printing = false;
+		if ($bookfilter && (!$filter["superflag"] && $chapterrange && $verserange && $searchfilter) || ($filter["superflag"] && false))
 			$verses[] = $entry;
 	}
 	return $verses;
