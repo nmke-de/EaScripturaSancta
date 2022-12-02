@@ -67,7 +67,7 @@ function parsequery ($query) {
 		return $filter;
 	} else if (preg_match("/^-([1-9][0-9]*)/u", $query, $matched)) {
 		$filter["chapter-end"] = (int)$matched[1];
-		$query = substr($query, strlen($matched[1]));
+		$query = substr($query, strlen($matched[0]));
 	} else return $filter;
 
 	if (preg_match("/^:([1-9][0-9]*)$/u", $query, $matched))
