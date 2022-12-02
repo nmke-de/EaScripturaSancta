@@ -1,30 +1,6 @@
 <?php
 
-// Associative array to filter verses
-$filter = array();
-$filter["search"] = ".*";
-$filter["book"] = ".*";
-$filter["chapter"] = 1;
-$filter["chapter-end"] = 150;
-$filter["verse"] = 1;
-$filter["verse-end"] = 176;
-
-$NUMBER = "[1-9][0-9]*";
-$BOOK = "[1-9]?[a-zA-Z ]+";
-$SEARCH = "/(.*)$";
-
-$AFTERVERSE = "-($NUMBER):($NUMBER)|-($NUMBER)|(,$NUMBER)*";
-$AFTERCHAPTER = "$SEARCH|-($NUMBER)|:($NUMBER)($AFTERVERSE)?";
-$AFTERBOOK = "$SEARCH|[ :]?($NUMBER)($AFTERCHAPTER)?";
-
 function parsequery ($query) {
-	/*if ($query[0] == "/")
-		return function ($entry) {return preg_match($query . "/ui", $entry[5]);};
-	preg_match("/^($BOOK)($AFTERBOOK)$/u", $query, $matches);
-	$book = $matches[1];
-	if ($matches[2][0] == "/")
-		return function ($entry) {return (preg_match($book, $entry[0]) || $book = $entry[1]) && preg_match($matches[2] . "/ui", $entry[5]);};
-	;*/
 	$filter = array();
 	$filter["search"] = ".*";
 	$filter["book"] = ".*";
@@ -32,7 +8,6 @@ function parsequery ($query) {
 	$filter["chapter-end"] = 150;
 	$filter["verse"] = 1;
 	$filter["verse-end"] = 176;
-	$filter["superflag"] = false;
 
 	if (preg_match("/^([1-9]?[a-zA-Z ]+)/u", $query, $matched)) {
 		$filter["book"] = trim($matched[1]);
@@ -73,7 +48,6 @@ function parsequery ($query) {
 
 	if (preg_match("/^:([1-9][0-9]*)$/u", $query, $matched)) {
 		$filter["verse-end"] = (int)$matched[1];
-		$filter["superflag"] = true;
 	}
 	return $filter;
 }
@@ -135,7 +109,6 @@ Navigation</h3>
 <ul>
 <li>[Buch]</li>
 <li>[Buch] [Kapitel]</li>
-<li>[Buch] [Kapitel]:[Vers](,[Vers])...</li>
 <li>[Buch] [Kapitel]-[Kapitel]</li>
 <li>[Buch] [Kapitel]:[Vers]-[Vers]</li>
 <li>[Buch] [Kapitel]:[Vers]-[Kapitel]:[Vers]</li>
@@ -154,63 +127,30 @@ Navigation</h3>
 }
 
 $filter = parsequery($_GET["query"]);
-echo json_encode($filter);
+echo "<code>" . json_encode($filter) . "</code>\n";
 $cmd = "bib/".$_GET["src"]." ";
 if ($_GET["query"] == "-l") $cmd = $cmd . $_GET["query"];
 elseif ($_GET["query"] == "") $cmd = "echo \"Help\\n0:0\\tRead the syntax section!\"";
 else $cmd = $cmd . "-W " . $_GET["query"];
-$txt = "";
-/*if ($_GET["query"][0] == "/")*/ $txt = json_encode(matchverses($f, $filter));
-//else $txt = shell_exec(escapeshellcmd($cmd));
+$result = matchverses($f, $filter);
+
+echo "<code>" . json_encode($result) . "</code>\n";
 
 if ($_GET["embed"] != "true"){
-	//echo $txt;
-	if ($_GET["query"] == "-l"){
-		echo "<pre><code>".$txt."</code></pre>";
-		$li = explode("/\n/gm",$txt);
-		echo json_encode($li);
-		$txt = "";
-		foreach($li as $it){
-			if(!$it) continue;
-			echo "<ol>";
-			echo "<li>".$it."</li>";
-			echo "</ol>";
-			$bookid = explode("(",$it);
-			$bookid = $bookid[1];
-			$bookid = explode(")",$bookid);
-			$bookid = $bookid[0];
-			echo $bookid;
-			$txt = $txt."\n<li><a href='https://www.nmke.de/EaScripturaSancta/?query=$bookid&src=".$_GET["src"]."'>$it</a></li>";
+	$lastbook = "";
+	foreach ($result as $current) {
+		if ($lastbook != $current[0]) {
+			if ($lastbook != "")
+				echo "</dl>\n";
+			$lastbook = $current[0];
+			echo "<h2>$current[0]</h2>\n<dl>\n";
 		}
-		//$txt = preg_replace("/\\n/u","</li>\n<li>",$txt);
-		$txt = "<ol>".$txt."\n</ol>";
-	}else if ($_GET["query"][0] == "/") {
-		$lastbook = "";
-		foreach ($txt as $entry) {
-			if ($lastbook != $entry[0]) {
-				if ($lastbook != "")
-					echo "</table>\n";
-				$lastbook = $entry[0];
-				echo "<table><caption>$entry[0]</caption>\n";
-			}
-			echo "<tr><td>$entry[3]:$entry[4]</td><td>$entry[5]</td></tr>\n";
-			//echo $entry[3] . ":" . $entry[4] . "\t" . $entry[5] . "<br />\n";
-		}
-		echo "</table>";
-	}else if(!preg_match("/^Unknown reference: /u",$txt)){
-		/*"if(!txt.match(/^Unknown reference: /)){
-				txt = txt.replace(/^(.*?)\\n/g,(match,bname)=>{return '<h3>'+bname+'</h3>';});
-				txt = txt.replace(/\\n((\\d )?[^0-9]*?)\\n/g,(match,bname)=>{return '<h3>'+bname+'</h3>';});
-				txt = txt.replace(/\\n/g,'<br />');
-			}"*/
-		$txt = preg_replace_callback("/^(.*?)\\n/u",function($match){return "<h3>".$match[1]."</h3>";},$txt);
-		$txt = preg_replace_callback("/\\n((\\d )?[^0-9]*?)\\n/u",function($match){return "<h3>".$match[1]."</h3>";},$txt);
-		$txt = preg_replace("/\\n/u","<br />",$txt);
+		echo "<dt>$current[3]:$current[4]</dt><dd>$current[5]</dd>\n";
 	}
-	echo $txt;
+	echo "</dl>";
 	echo "</article>\n</div>\n</body>\n</html>\n";
 }else{
-	echo $txt;
+	echo $result;
 	//echo escapeshellcmd($cmd);
 }
 
