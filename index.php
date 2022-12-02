@@ -80,20 +80,14 @@ function parsequery ($query) {
 
 function matchverses($file, $filter) {
 	$verses = array();
-	//$sf_printing = false;
 	while (($line = fgets($file)) !== false) {
 		$entry = explode("\t", $line);
 		$bookfilter = (preg_match("/$filter[book]/ui", $entry[0]) || $filter["book"] == $entry[1]);
 		$chapterrange = ($filter["chapter"] <= (int)$entry[3] && $filter["chapter-end"] >= (int)$entry[3]);
-		$verserange = ($filter["verse"] <= (int)$entry[4] && $filter["verse-end"] >= (int)$entry[4]);
 		$searchfilter = (preg_match("/$filter[search]/iu", $entry[5]));
-		$sf_start = ($filter["chapter"] == (int)$entry[3] ? $filter["verse"] <= (int)$entry[4] : true);
-		$sf_end = ($filter["chapter-end"] == (int)$entry[3] ? $filter["verse-end"] >= (int)$entry[4] : true);
-		//if ($filter["superflag"] && !$sf_printing && $bookfilter && $filter["chapter"] == (int)$entry[3] && $filter["verse"] == (int)$entry[4])
-		//	$sf_printing = true;
-		//else if ($filter["superflag"] && !$sf_printing && $bookfilter && $filter["chapter-end"] == (int)$entry[3] && $filter["verse-end"] > (int)$entry[4])
-		//	$sf_printing = false;
-		if ($bookfilter && ((!$filter["superflag"] && $chapterrange && $verserange && $searchfilter) || ($filter["superflag"] && $chapterrange && $sf_start && $sf_end)))
+		$versestart = ($filter["chapter"] == (int)$entry[3] ? $filter["verse"] <= (int)$entry[4] : true);
+		$verseend = ($filter["chapter-end"] == (int)$entry[3] ? $filter["verse-end"] >= (int)$entry[4] : true);
+		if ($bookfilter && $chapterrange && $versestart && $verseend && $searchfilter)
 			$verses[] = $entry;
 	}
 	return $verses;
