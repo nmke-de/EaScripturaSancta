@@ -9,6 +9,9 @@ function parsequery ($query) {
 	$filter["verse"] = 1;
 	$filter["verse-end"] = 176;
 
+	if ($query == "/.*" || preg_match("/^\/.$/u", $query))
+		return $filter;
+
 	if (preg_match("/^([1-9]?[a-zA-Z\x80-\xff ]+)/", $query, $matched)) {
 		$filter["search"] = ".*";
 		$filter["book"] = trim($matched[1]);
