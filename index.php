@@ -72,6 +72,16 @@ function matchverses($file, $filter) {
 	return $verses;
 }
 
+function ls() {
+	$ls = shell_exec("ls bib/ | grep -v index.php | sort | uniq | cut -d. -f1");
+	$bibles = explode("\n",$ls);
+	echo "<ul>\n";
+	foreach ($bibles as $bible){
+		echo "<li><a href='./?src=$bible'>$bible</a></li>\n";	
+	}
+	echo "</ul>\n";
+}
+
 $f = fopen("bib/" . $_GET["src"] . ".tsv", "r");
 
 $embed = $_GET["embed"] == "true";
@@ -140,31 +150,33 @@ $result = matchverses($f, $filter);
 
 //echo "<code>" . json_encode($result) . "</code>\n";
 
-
-
-$lastbook = "";
-foreach ($result as $current) {
-	if ($lastbook != $current[0]) {
-		if ($lastbook != "")
+if (!$_GET["src"]) {
+	ls();
+} else {
+	$lastbook = "";
+	foreach ($result as $current) {
+		if ($lastbook != $current[0]) {
+			if ($lastbook != "")
+				if ($embed)
+					echo "\n";
+				else
+					echo "</dl>\n";
+			$lastbook = $current[0];
 			if ($embed)
-				echo "\n";
+				echo "$current[0]\n\n";
 			else
-				echo "</dl>\n";
-		$lastbook = $current[0];
+				echo "<h2>$current[0]</h2>\n<dl>\n";
+		}
 		if ($embed)
-			echo "$current[0]\n\n";
+			echo "$current[3]:$current[4]\t$current[5]";
 		else
-			echo "<h2>$current[0]</h2>\n<dl>\n";
+			echo "<dt>$current[3]:$current[4]</dt><dd>$current[5]</dd>\n";
 	}
-	if ($embed)
-		echo "$current[3]:$current[4]\t$current[5]";
-	else
-		echo "<dt>$current[3]:$current[4]</dt><dd>$current[5]</dd>\n";
+	if (!$embed)
+		echo "</dl>";
 }
-if (!$embed) {
-	echo "</dl>";
+if (!$embed)
 	echo "</article>\n</div>\n</body>\n</html>\n";
-}
 
 fclose($f);
 
