@@ -2,23 +2,20 @@
 
 function parsequery ($query) {
 	$filter = array();
-	$filter["search"] = ".*";
-	$filter["book"] = ".*";
+	$filter["search"] = "\x00";
+	$filter["book"] = "\x00";
 	$filter["chapter"] = 1;
 	$filter["chapter-end"] = 150;
 	$filter["verse"] = 1;
 	$filter["verse-end"] = 176;
 
-	if (!$query) {
-		$filter["search"] = "\x00";
-		$filter["book"] = "\x00";
-	}
-
 	if (preg_match("/^([1-9]?[a-zA-Z\x80-\xff ]+)/", $query, $matched)) {
+		$filter["search"] = ".*";
 		$filter["book"] = trim($matched[1]);
 		$query = substr($query, strlen($matched[1]));
 	} else if (preg_match("/^\/(.*)$/u", $query, $matched)) {
 		$filter["search"] = $matched[1];
+		$filter["book"] = ".*";
 		return $filter;
 	} else return $filter;
 
