@@ -9,7 +9,7 @@ function parsequery ($query) {
 	$filter["verse"] = 1;
 	$filter["verse-end"] = 176;
 
-	if (preg_match("/^([1-9]?[a-zA-Z ]+)/u", $query, $matched)) {
+	if (preg_match("/^([1-9]?[a-zA-Z\x80-\xff ]+)/", $query, $matched)) {
 		$filter["book"] = trim($matched[1]);
 		$query = substr($query, strlen($matched[1]));
 	} else if (preg_match("/^\/(.*)$/u", $query, $matched)) {
@@ -128,13 +128,9 @@ Navigation</h3>
 
 $filter = parsequery($_GET["query"]);
 echo "<code>" . json_encode($filter) . "</code>\n";
-$cmd = "bib/".$_GET["src"]." ";
-if ($_GET["query"] == "-l") $cmd = $cmd . $_GET["query"];
-elseif ($_GET["query"] == "") $cmd = "echo \"Help\\n0:0\\tRead the syntax section!\"";
-else $cmd = $cmd . "-W " . $_GET["query"];
 $result = matchverses($f, $filter);
 
-echo "<code>" . json_encode($result) . "</code>\n";
+//echo "<code>" . json_encode($result) . "</code>\n";
 
 if ($_GET["embed"] != "true"){
 	$lastbook = "";
