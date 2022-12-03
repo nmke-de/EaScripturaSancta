@@ -9,7 +9,7 @@ function parsequery ($query) {
 	$filter["verse"] = 1;
 	$filter["verse-end"] = 176;
 
-	if ($query == "/.*" || preg_match("/^\/.$/u", $query))
+	if (preg_match("/^\/(.[*+?] ?)*$/u", $query) || preg_match("/^\/.$/u", $query) || preg_match("/^\/\[.*?\][*] ?$/u", $query) || preg_match("/^\/[\][ws][*+?]$/u", $query))
 		return $filter;
 
 	if (preg_match("/^([1-9]?[a-zA-Z\x80-\xff ]+)/", $query, $matched)) {
