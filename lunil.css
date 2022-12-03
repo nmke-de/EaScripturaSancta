@@ -34,6 +34,7 @@ h2{
 }
 
 article{
+	display: block;
 	margin:0;
 	text-align:justify;
 	text-indent: 15px;
@@ -109,10 +110,26 @@ nav:hover .dd{
 	padding: 0 4px;
 }
 
+.caps {
+	text-transform: uppercase;
+}
+
+a.icon {
+	float: left;
+}
+
 div#syntax{
 	border: 1px solid #000;
 	background-color:#ccf;
 	padding: 10px;
+}
+
+div#syntax h2 {
+	text-align: center;
+}
+
+input#q {
+	font-size: 1.2rem;
 }
 
 /*Media-queries*/

@@ -90,12 +90,12 @@ if (!$embed) {
 <meta charset='utf-8' />
 <link rel='stylesheet' type='text/css' href='./lunil.css' />
 <link rel='shortcut icon' type='image/svg' href='icon.svg' />
-<title>ESS - $_GET[src]</title>
+<title class=caps>ESS - $_GET[src]</title>
 </head>
 <body>
 <div id=\"box\">
 <nav>
-<h3><a style='float:left;' href='index.php'><img src='icon.svg' 
+<h3><a class=icon href='index.php'><img src='icon.svg' 
 	alt='ESS-Icon' width='20' height='20'/></a>
 Navigation</h3>
 <a href='https://www.nmke.de/impressum.cdo'>Impressum</a>
@@ -108,7 +108,7 @@ Navigation</h3>
 	$bibles = ls();
 	foreach ($bibles as $bible){
 		if ($bible)
-			echo "<li><a href='./?query=$_GET[query]&src=$bible'>$bible</a></li>\n";
+			echo "<li><a href='./?query=$_GET[query]&src=$bible' class=caps>$bible</a></li>\n";
 	}
 	echo "<hr>\n";
 	$lastbook = "";
@@ -123,9 +123,9 @@ Navigation</h3>
 	echo "</ul>
 </div>
 </nav>
-<article id='main-article' style='display:block;'>
+<article id='main-article'>
 <h1>Ea Scriptura Sancta</h1>
-<div id='syntax'><h2 style='text-align:center;'>Syntax</h2>
+<div id='syntax'><h2>Syntax</h2>
 <ul>
 <li>[book]</li>
 <li>[book] [chapter]</li>
@@ -136,9 +136,9 @@ Navigation</h3>
 <li>[book]/[search term]</li>
 <li>[book] [chapter]/[search term]</li>
 </div>
-<h2 style='text-transform:uppercase;'>".$_GET["src"]."</h2>
+<h2 class=caps>".$_GET["src"]."</h2>
 <form action='index.php' method='get'>
-<input type='text' id='q' placeholder='Amos 1:1' style='font-size:1.2rem;' name='query' value='".$_GET["query"]."' />
+<input type='text' id='q' placeholder='Amos 1:1' name='query' value='".$_GET["query"]."' />
 <input type='hidden' name='src' value='".$_GET["src"]."'/>
 <button>Send</button>
 <label name='debug'><input type='checkbox' name='debug'/>Debug</label>
@@ -157,7 +157,7 @@ if (!$_GET["src"]) {
 	$bibles = ls();
 	foreach ($bibles as $bible){
 		if ($bible)
-			echo "<li><a href='./?src=$bible'>$bible</a></li>\n";
+			echo "<li><a href='./?src=$bible' class=caps>$bible</a></li>\n";
 	}
 	echo "</ul>\n";
 } else {
