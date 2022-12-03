@@ -75,12 +75,7 @@ function matchverses($file, $filter) {
 function ls() {
 	$ls = shell_exec("ls bib/ | grep -v index.php | sort | uniq | cut -d. -f1");
 	$bibles = explode("\n",$ls);
-	echo "<ul>\n";
-	foreach ($bibles as $bible){
-		if ($bible)
-			echo "<li><a href='./?src=$bible'>$bible</a></li>\n";	
-	}
-	echo "</ul>\n";
+	return $bibles;
 }
 
 $f = fopen("bib/" . $_GET["src"] . ".tsv", "r");
@@ -105,11 +100,17 @@ if (!$embed) {
 Navigation</h3>
 <a href='https://www.nmke.de/impressum.cdo'>Impressum</a>
 <div class='dd'>
-<h4><a href='index.php'>ESS</a></h4>
+<h4><a href='./'>ESS</a></h4>
 <ul>
-<li><a href='index.php'>Home</a></li>
+<li><a href='./?src=$_GET[src]'>Home</a></li>
 <li><a href='https://github.com/nmke-de/EaScripturaSancta'>Source Code</a></li>
 <hr>\n";
+	$bibles = ls();
+	foreach ($bibles as $bible){
+		if ($bible)
+			echo "<li><a href='./?query=$_GET[query]&src=$bible'>$bible</a></li>\n";
+	}
+	echo "<hr>\n";
 	$lastbook = "";
 	while (($line = fgets($f)) !== false) {
 		$entry = explode("\t", $line);
@@ -152,7 +153,13 @@ $result = matchverses($f, $filter);
 //echo "<code>" . json_encode($result) . "</code>\n";
 
 if (!$_GET["src"]) {
-	ls();
+	echo "<ul>\n";
+	$bibles = ls();
+	foreach ($bibles as $bible){
+		if ($bible)
+			echo "<li><a href='./?src=$bible'>$bible</a></li>\n";
+	}
+	echo "</ul>\n";
 } else {
 	$lastbook = "";
 	foreach ($result as $current) {
