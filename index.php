@@ -77,7 +77,8 @@ function ls() {
 	$bibles = explode("\n",$ls);
 	echo "<ul>\n";
 	foreach ($bibles as $bible){
-		echo "<li><a href='./?src=$bible'>$bible</a></li>\n";	
+		if ($bible)
+			echo "<li><a href='./?src=$bible'>$bible</a></li>\n";	
 	}
 	echo "</ul>\n";
 }
