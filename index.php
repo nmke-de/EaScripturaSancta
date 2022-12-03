@@ -112,10 +112,12 @@ Navigation</h3>
 	}
 	echo "<hr>\n";
 	$lastbook = "";
+	$books = array();
 	while (($line = fgets($f)) !== false) {
 		$entry = explode("\t", $line);
 		if ($lastbook !== $entry[0]) {
 			$lastbook = $entry[0];
+			$books[] = $entry;
 			echo "<li><a href='index.php?query=" . $entry[1] . "&src=" . $_GET["src"] . "'>" . $entry[0] . "</a></li>\n";
 		}
 	}
@@ -160,6 +162,9 @@ if (!$_GET["src"]) {
 			echo "<li><a href='./?src=$bible' class=caps>$bible</a></li>\n";
 	}
 	echo "</ul>\n";
+} else if (!$_GET["query"]) {
+	foreach ($books as $entry)
+		echo "<li><a href='index.php?query=" . $entry[1] . "&src=" . $_GET["src"] . "'>" . $entry[0] . "</a></li>\n";
 } else {
 	$lastbook = "";
 	foreach ($result as $current) {
